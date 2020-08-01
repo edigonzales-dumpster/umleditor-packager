@@ -1,4 +1,4 @@
-name: ili2c
+name: umleditor
 on:
   push:
     # tags:
@@ -106,59 +106,59 @@ jobs:
           asset_name: ${{matrix.asset_prefix}}${{env.VERSION}}${{matrix.asset_suffix}}.${{matrix.package}}
           asset_content_type: application/octet-stream
   
-  # build-windows-image:
-  #   name: 'Build Windows Image'
-  #   needs: [create-release]
-  #   runs-on: windows-latest
+  build-windows-image:
+    name: 'Build Windows Image'
+    needs: [create-release]
+    runs-on: windows-latest
 
-  #   steps:
-  #     - name: 'Checkout'
-  #       uses: actions/checkout@v2
-  #     - name: 'Download zipped ilivalidator release'
-  #       run: |
-  #         curl -L https://github.com/claeis/ilivalidator/releases/download/ilivalidator-${{env.VERSION}}/ilivalidator-${{env.VERSION}}.zip -o ilivalidator.zip
-  #       shell: bash
-  #     - name: 'Unzip ilivalidator release'
-  #       run: |
-  #         unzip ilivalidator.zip
-  #       shell: bash
-  #     - name: 'Setup Java 14'
-  #       uses: actions/setup-java@v1
-  #       with:
-  #         java-version: 14
-  #     - name: 'Get dependencies (jdeps)'
-  #       run: |
-  #         echo "::set-env name=DEPS::$(jdeps --class-path 'libs/*' --multi-release base -recursive --ignore-missing-deps --print-module-deps ilivalidator-${{env.VERSION}}.jar)"
-  #       shell: bash
-  #     - name: 'Create JRE (jlink)'
-  #       run: |
-  #         jlink --add-modules ${{env.DEPS}} --output ilivalidator-jre
-  #     - name: 'Copy main jar to libs'
-  #       run: |
-  #         cp ilivalidator-${{env.VERSION}}.jar libs/
-  #     - name: 'Create package (jpackage)'
-  #       run: |
-  #         jpackage --icon icon-ilivalidator-128x128.ico --name ilivalidator --type msi --input libs --main-jar ilivalidator-${{env.VERSION}}.jar -d output --runtime-image ilivalidator-jre --app-version ${{env.VERSION}}
-  #     - name: List all files in output directory
-  #       run: ls -la output
-  #       shell: bash
-  #     - name: 'Get Release URL'
-  #       # if: contains(github.ref, 'v')
-  #       uses: actions/download-artifact@v2-preview
-  #       with:
-  #         name: 'upload_url.txt'
-  #     - name: 'Get Upload URL'
-  #       # if: contains(github.ref, 'v')
-  #       run: |
-  #         echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
-  #     - name: 'Upload Release Asset'
-  #       # if: contains(github.ref, 'v')
-  #       id: upload-release-asset
-  #       uses: actions/upload-release-asset@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  #       with:
-  #         upload_url: ${{env.UPLOAD_URL}}
-  #         asset_path: output/ilivalidator-${{env.VERSION}}.msi
-  #         asset_name: ilivalidator-${{env.VERSION}}.msi
-  #         asset_content_type: application/octet-stream
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+      - name: 'Download zipped umleditor release'
+        run: |
+          curl -L https://downloads.interlis.ch/umleditor/umleditor-${{env.VERSION}}.zip -o umleditor.zip
+        shell: bash
+      - name: 'Unzip umleditor release'
+        run: |
+          unzip umleditor.zip
+        shell: bash
+      - name: 'Setup Java 14'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+      - name: 'Get dependencies (jdeps)'
+        run: |
+          echo "::set-env name=DEPS::$(jdeps --class-path 'libs/*' --multi-release base -recursive --ignore-missing-deps --print-module-deps umleditor-${{env.VERSION}}.jar)"
+        shell: bash
+      - name: 'Create JRE (jlink)'
+        run: |
+          jlink --add-modules ${{env.DEPS}} --output umleditor-jre
+      - name: 'Copy main jar to libs'
+        run: |
+          cp umleditor-${{env.VERSION}}.jar libs/
+      - name: 'Create package (jpackage)'
+        run: |
+          jpackage --icon icon-umleditor-v2-128x128.ico --name umleditor --type msi --input libs --main-jar umleditor-${{env.VERSION}}.jar -d output --runtime-image umleditor-jre --app-version ${{env.VERSION}}
+      - name: List all files in output directory
+        run: ls -la output
+        shell: bash
+      - name: 'Get Release URL'
+        # if: contains(github.ref, 'v')
+        uses: actions/download-artifact@v2-preview
+        with:
+          name: 'upload_url.txt'
+      - name: 'Get Upload URL'
+        # if: contains(github.ref, 'v')
+        run: |
+          echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
+      - name: 'Upload Release Asset'
+        # if: contains(github.ref, 'v')
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{env.UPLOAD_URL}}
+          asset_path: output/umleditor-${{env.VERSION}}.msi
+          asset_name: umleditor-${{env.VERSION}}.msi
+          asset_content_type: application/octet-stream
