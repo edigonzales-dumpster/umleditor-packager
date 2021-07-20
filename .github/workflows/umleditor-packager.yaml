@@ -19,7 +19,7 @@ jobs:
             asset_suffix: '-1_amd64'
           - os: 'macos-latest'
             label: 'mac'
-            package: 'dmg'
+            package: 'pkg'
             icon: 'icon-umleditor-v2-128x128.icns'
             asset_prefix: 'umleditor-'
             asset_suffix: ''
